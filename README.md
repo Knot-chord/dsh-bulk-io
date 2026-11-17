@@ -213,16 +213,43 @@ namespace plane only, no file data moved · 7,500 primitives at 16,903/s (3/file
 
 ## 兼容性
 
-- **声明**：DSH `>=0.2.1-rc.5 <0.3.0`（`engines.dsh`），Node `>=20`，零运行时依赖。
-- **实测**：`0.2.1-rc.5`（独立 `DSH_HOME` 沙盒：装入 → `--dump-config` 含 `id: bulk-io` → 启动无加载错误 → 模型真的调用 `bulk_scan`）、`0.2.2-rc.3`（日常使用）。
-- 只核过类型、没实机跑过的版本不写进声明。DSH 升级后先确认这四个接口没变形：`ctx.tools.register`、`ctx.systemPrompt.section`、`ctx.sandboxPolicy.resolve`、`ctx.effect`。
+**运行要求**
 
-版本之间确实变过东西：`ctx.workingDirectory` 是拿到"会话工作目录"的正规入口，拿不到时退回进程目录。
+| 项 | 要求 |
+|---|---|
+| DSH | `>=0.2.1-rc.5 <0.3.0`（`engines.dsh`） |
+| Node | `>=20` |
+| 运行时依赖 | 无 |
+| 平台 | Windows 11 + NTFS |
 
-本插件的相对路径因此先问 `ctx.workingDirectory.get(session)`，再退 `process.cwd()`。
+**实测**
 
-- **平台**：只支持 Windows 11 + NTFS。插件没有按系统写的配置——它运行时探测能力（`robocopy`、`tar`、卷是否支持 clone、哪个安全软件在过滤器链上），探测不到就回退。别的系统能跑但不是支持承诺。
-- 卷格式：NTFS 不支持 reflink，所以 clone 这一级在这里永远不会被选中；换成 ReFS 才会，不需要改任何配置。
+| DSH 版本 | 等级 | 依据 |
+|---|---|---|
+| `0.2.2-rc.3` | **推荐** | 日常使用；六个工具全路径跑过 |
+| `0.2.1-rc.5` | **兼容** | 独立 `DSH_HOME` 沙盒：装入 → `--dump-config` 含 `id: bulk-io` → 启动无加载错误 → 模型实际调用 `bulk_scan` 并拿到结果 |
+| `0.2.0-rc.2` | 不保证 | 低于下界，未测 |
+
+只核过类型、没实机跑过的版本不写进上表。
+
+**DSH 升级后先确认这五个接口**
+
+| 接口 | 用在哪 | 变了会怎样 |
+|---|---|---|
+| `ctx.tools.register` | 注册六个工具 | 工具根本不出现在列表里 |
+| `ctx.systemPrompt.section` | 常驻提示词 | 模型不知道该在什么时候调用 |
+| `ctx.sandboxPolicy.resolve` | 写 / 移动 / 删除的边界 | 要么误拒，要么放过越界写入 |
+| `ctx.workingDirectory.get` | 相对路径的基准目录 | 相对路径落到进程目录而不是会话目录 |
+| `ctx.effect` | 注册与卸载清理 | 重载后线程池残留 |
+
+**版本差异**
+
+- `ctx.workingDirectory.get(session)` 是拿到"会话工作目录"的正规入口。本插件的相对路径先问它，问不到才退回 `process.cwd()`；`0.2.2-rc.3` 上该接口存在。
+
+**平台**
+
+- 只支持 Windows 11 + NTFS。没有按系统写的配置：运行时探测 `robocopy`、`tar`、卷是否支持 clone、过滤器链上的安全软件，探测不到就回退。别的系统能跑，但不是支持承诺。
+- NTFS 不支持 reflink，所以 clone 这一级在这里永远不会被选中；换成 ReFS 才会，不需要改任何配置。
 
 ## token 预算
 
