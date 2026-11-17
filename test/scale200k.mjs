@@ -8,13 +8,14 @@
 
 import { mkdirSync, rmSync, statSync } from 'node:fs'
 import { join } from 'node:path'
+import { tmpdir } from 'node:os'
 import { performance } from 'node:perf_hooks'
 import * as engine from '../lib/engine.js'
 import { closePool } from '../lib/pool.js'
 
 const N = Number(process.argv[2] || 200_000)
 const FILES_PER_DIR = 100
-const W = 'D:\\Deepseek Hardness\\.bulkio-200k'
+const W = join(process.env.DSH_BULK_BENCH_ROOT ?? tmpdir(), '.bulkio-200k')
 const BODY = 'x'.repeat(100)
 
 let peak = 0

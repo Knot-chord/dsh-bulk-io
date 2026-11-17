@@ -8,12 +8,13 @@
 
 import { mkdirSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
+import { tmpdir } from 'node:os'
 import { performance } from 'node:perf_hooks'
 import * as engine from '../lib/engine.js'
 import { closePool } from '../lib/pool.js'
 
 const N = Number(process.argv[2] || 30_000)
-const BASE = 'D:\\Deepseek Hardness\\.bulkio-win'
+const BASE = join(process.env.DSH_BULK_BENCH_ROOT ?? tmpdir(), '.bulkio-win')
 const SRC = join(BASE, 'src')
 const BODY = 'x'.repeat(100)
 let peak = process.memoryUsage().rss

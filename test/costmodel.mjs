@@ -19,7 +19,8 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { performance } from 'node:perf_hooks'
 
-const WORK = 'D:\\Deepseek Hardness'
+// Override to benchmark another volume; defaults to a temp dir on the system disk.
+const WORK = process.env.DSH_BULK_BENCH_ROOT ?? mkdtempSync(join(tmpdir(), 'dsh-bulk-bench-'))
 const results = []
 
 function ops (label, n, fn) {

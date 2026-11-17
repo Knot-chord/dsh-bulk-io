@@ -2,13 +2,16 @@ import { mkdirSync, rmSync } from "node:fs"
 import { join } from "node:path"
 import { WorkerPool } from "../lib/pool.js"
 import { performance } from "node:perf_hooks"
+import { tmpdir } from "node:os"
+
+const BENCH_ROOT = process.env.DSH_BULK_BENCH_ROOT ?? tmpdir()
 
 const N = 1500, SIZE = 4096
 const body = "x".repeat(SIZE)
 const files = Array.from({length: N}, (_, i) => ({ path: `d${i%40}/f${i}.txt`, content: body }))
 
 for (const size of [1, 2, 4, 8, 16, 32]) {
-  const root = join("D:\\Deepseek Hardness", `.bench-pool-${size}`)
+  const root = join(BENCH_ROOT, `.bench-pool-${size}`)
   rmSync(root, {recursive: true, force: true}); mkdirSync(root, {recursive: true})
   const pool = new WorkerPool({ size })
   // warm up the threads with a tiny job so spawn cost is not measured
