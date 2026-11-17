@@ -5,6 +5,7 @@ DeepSeek Harness 插件，界面名「**大量小文件读写优化**」：一�
 > 名字四要素：**大量**（bulk，一次调用顶几万次）· **小文件**（逐个文件的系统调用才是瓶颈）· **读写**（`io`，含建立在读写之上的扫描/复制/移动/删除）· **优化**（线程池、rename、最便宜的原生路径）。
 
 ![DSH](https://img.shields.io/badge/DSH-%3E%3D0.2.1--rc.5%20%3C0.3.0-blue)
+![CI](https://github.com/Knot-chord/dsh-bulk-io/actions/workflows/ci.yml/badge.svg)
 ![tests](https://img.shields.io/badge/tests-30%20passed-green)
 ![pack](https://img.shields.io/badge/pack-13%20modules-brightgreen)
 ![version](https://img.shields.io/badge/version-0.1.0-blue)
