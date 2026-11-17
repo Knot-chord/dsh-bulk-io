@@ -1,0 +1,3 @@
+- insert:
+    - id: bulk-io
+      name: '@local/dsh-bulk-io'

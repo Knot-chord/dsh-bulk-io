@@ -1,0 +1,61 @@
+{
+  "name": "@local/dsh-bulk-io",
+  "version": "0.1.0",
+  "description": "Optimized bulk read and write for many small files (plus copy, move, delete): one tool call handles thousands of files through a warm worker-thread pool, native copy paths, robocopy and a tar|zstd stream, with a reversible trash for deletes.",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "files",
+    "batch",
+    "bulk",
+    "copy",
+    "small-files",
+    "performance"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Knot-chord/dsh-bulk-io.git"
+  },
+  "homepage": "https://github.com/Knot-chord/dsh-bulk-io#readme",
+  "bugs": {
+    "url": "https://github.com/Knot-chord/dsh-bulk-io/issues"
+  },
+  "engines": {
+    "node": ">=20",
+    "dsh": ">=0.2.1-rc.5 <0.3.0"
+  },
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./cli": "./lib/cli.mjs"
+  },
+  "bin": {
+    "dsh-bulk": "./lib/cli.mjs"
+  },
+  "scripts": {
+    "test": "node test/engine.test.mjs",
+    "bench": "node test/bench.mjs"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "lib",
+    "locale/*.json",
+    "icon.svg",
+    "docs",
+    "bin",
+    "test",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "type": "module"
+}

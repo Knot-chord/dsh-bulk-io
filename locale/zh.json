@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "大量小文件读写优化",
+    "description": "大量小文件读写优化：一次调用处理成千上万个文件，替代逐文件的 read/write 与 shell 循环。常驻工作线程池做真正的并行系统调用，同盘移动走 rename 不搬数据，复制走最便宜的原生路径，删除进可恢复的回收站。与 write/read 使用同一套文件权限策略（含 junction 解析），装完即用，无需配置。",
+    "detail": "docs/DETAIL.md"
+  }
+}

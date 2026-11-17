@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Bulk small-file read/write, optimized",
+    "description": "Optimized bulk read and write for many small files (plus scan, copy, move, delete): one call replaces per-file read/write and shell loops. One tool call handles thousands of files through a warm worker-thread pool, moves inside a volume by rename, copies through the native path, and parks deletes in a reversible trash. Enforces the same file policy as write and read, including resolving junctions, and needs no configuration.",
+    "detail": "docs/DETAIL.md"
+  }
+}
