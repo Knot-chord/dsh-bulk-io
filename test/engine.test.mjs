@@ -5,7 +5,7 @@
 
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, existsSync, mkdirSync, readdirSync, writeFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, existsSync, mkdirSync, readdirSync, writeFileSync, rmSync, symlinkSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { test } from 'node:test'
@@ -257,6 +257,27 @@ test('deleting a tree removes the junction entry, never its target', async (t) =
 })
 
 /* --------------------------------------------------------------- file policy */
+
+test('a workspace root written another way still contains its own files', async () => {
+  // The root is not always spelled the way the filesystem does: a hosted runner's
+  // TEMP is C:\Users\RUNNER~1\... while realpath answers C:\Users\runneradmin\...
+  // A junction reproduces the same shape here: root given as the alias, target
+  // resolved to the real directory. Comparing a raw root against a resolved
+  // target refuses the workspace's own files, which is what turned CI red.
+  const real = join(root, 'alias-real')
+  const alias = join(root, 'alias-link')
+  mkdirSync(real, { recursive: true })
+  symlinkSync(real, alias, 'junction')
+
+  const policy = workspacePolicy(alias)
+  const written = await engine.writeFiles({
+    root: join(alias, 'deep', 'nested'),
+    files: [{ path: 'a.txt', content: 'a' }],
+    policy,
+  })
+  assert.equal(written.ok, true)
+  assert.equal(existsSync(join(real, 'deep', 'nested', 'a.txt')), true)
+})
 
 function workspacePolicy (workspaceRoot, mode = 'workspace-write') {
   return { mode, workspaceRoot, additionalWritableRoots: [], source: 'test' }
