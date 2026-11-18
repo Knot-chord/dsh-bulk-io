@@ -1,6 +1,6 @@
 {
   "name": "@local/dsh-bulk-io",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Optimized bulk read and write for many small files (plus copy, move, delete): one tool call handles thousands of files through a warm worker-thread pool, native copy paths, robocopy and a tar|zstd stream, with a reversible trash for deletes.",
   "keywords": [
     "dsh",
